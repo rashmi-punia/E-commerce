@@ -1,3 +1,4 @@
+// MainCarouselImages.js
 import { faker } from "@faker-js/faker";
 
 const randomImage = (name) => {
@@ -6,5 +7,5 @@ const randomImage = (name) => {
 };
 
 export const mainCarouselData = Array.from({ length: 6 }, () => ({
-    image: randomImage(faker.commerce.productName())
+  image: randomImage(faker.commerce.productName()),
 }));

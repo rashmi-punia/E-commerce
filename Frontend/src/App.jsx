@@ -8,13 +8,14 @@ import Login from "./Auth/Login";
 import Signup from "./Auth/Register";
 import ProductCard from "./components/ProductCard";
 import AddProducts from "./Pages/AddProducts";
+import MainCarousel from "./components/Carousel/MainCarousel";
 
 function App() {
   return (
     <>
       <div>
         <Navigation />
-        
+        {/* <MainCarousel /> */}
         <Routes>
           <Route path="/" element={<ProductCard />} />
           <Route path="/signup" element={<Signup />} />

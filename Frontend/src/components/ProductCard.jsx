@@ -7,6 +7,7 @@ import {
 } from "../constants/filterConstants";
 import SortPop from "./Sort";
 import RenderProducts from "./RenderProducts";
+import MainCarousel from "./Carousel/MainCarousel";
 
 const ProductCard = () => {
 
@@ -69,6 +70,8 @@ const ProductCard = () => {
   // };
 
   return (
+    <>
+<MainCarousel/>
     <div className="flex justify-center  my-12 space-x-4 ">
       <div className="w-[23vw] px-3 mt-3 py-2 sticky top-4 left-0 h-screen *:py-2 border rounded text-slate-700">
       <div className="flex justify-between">
@@ -83,6 +86,7 @@ const ProductCard = () => {
 
       <RenderProducts />
     </div>
+    </>
   );
 };
 

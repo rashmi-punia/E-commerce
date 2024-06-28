@@ -342,7 +342,7 @@ export default function Navigation() {
                       </Link>
                     </>
                   ) : (
-                    <span>Cart is Empty</span>
+                    <div className="p-2 text-pink-800">Cart is Empty</div>
                   )}
               </MenuItems>
             </Menu>
