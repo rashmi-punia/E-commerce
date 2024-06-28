@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeItemFromCart, updateCartItemQty } from "../actions/cartActions";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
+import { CHANGE_CART_QTY } from "../constants/filterConstants";
 
 const Cart = () => {
   const dispatch = useDispatch()
-  const cartList = useSelector((state) => state.cartList);
-  const { cart, loading, error } = cartList;
+  const cartList2 = useSelector((state) => state.cartList2);
+  const { cart, loading, error } = cartList2;
   const [total,setTotal] = useState();
   const [totalActualPrice,setTotalActualPrice]= useState()
   const [totalDiscountPercent,setTotalDiscountPercent] = useState()
@@ -60,17 +61,19 @@ const Cart = () => {
               <FormControl
                 as="select"
                 value={prod.qty}
-                onChange={(e) => {updateCartItemQty(prod._id, e.target.value)}
-                  // dispatch({
-                  //   type: CHANGE_CART_QTY,
-                  //   payload:{
-                  //     _id : prod._id,
-                  //     qty : e.target.value
+                // onChange={(e) => {updateCartItemQty(prod._id, e.target.value)}}
+                onClick={(e) => 
+                  dispatch({
+                    type: CHANGE_CART_QTY,
+                    payload:{
+                      _id : prod._id,
+                      qty : e.target.value
 
-                  //   },
+                    },
                     
-                  // })
+                  })
                 }
+                
                 className="bg-slate-50 w-14  rounded  focus:outline-none focus:ring-4 focus:ring-indigo-300  "
               >
                 {[...Array(prod.stock).keys()].map((x) => (

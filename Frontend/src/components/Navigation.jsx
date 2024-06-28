@@ -11,6 +11,7 @@ import { Popover, Popper } from "@mui/material";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import {
   FILTER_BY_SEARCH,
+  REMOVE_FROM_CART,
 } from "../constants/filterConstants";
 // import { Dropdown } from "react-bootstrap";
 import { removeItemFromCart } from "../actions/cartActions";
@@ -139,8 +140,8 @@ export default function Navigation() {
     navigate("/signup");
   };
 
-  const cartList = useSelector((state) => state.cartList);
-  const { cart } = cartList;
+  const cartList2 = useSelector((state) => state.cartList2);
+  const { cart } = cartList2;
 
   const filterState = useSelector((state) => state.filterState);
   const { searchQuery } = filterState;
@@ -311,22 +312,22 @@ export default function Navigation() {
                       {cart.slice(0,5).map((prod) => (
                 <MenuItem>
                         <span key={prod._id} className="flex space-x-2 p-1.5 justify-between">
-                          {/* <img
+                          <img
                             src={prod.images[0]}
                             className="cartItemImg rounded-full w-14 h-14 object-cover "
                             alt={prod.title}
-                          /> */}
+                          />
                           <div className="flex-1 flex flex-col">
                             <span className="text-lg text-gray-500 text-nowrap truncate">{prod.title}</span>
                             <span className="text-sky-600">${prod.discountPrice}</span>
                           </div>
                           <AiFillDelete
                             className="size-5 text-red-500"
-                            onClick={() => dispatch(removeItemFromCart(prod._id)) }
-                              // dispatch({
-                              //   type: REMOVE_FROM_CART,
-                              //   payload: prod,
-                              // })
+                            onClick={() => 
+                              dispatch({
+                                type: REMOVE_FROM_CART,
+                                payload: prod,
+                              })}
                             
                           />
                         </span>

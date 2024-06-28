@@ -10,6 +10,8 @@ import {
   UPDATE_CART_ITEM_QTY_SUCCESS,
 } from "../constants/filterConstants";
 
+import { ADD_TO_CART, CHANGE_CART_QTY, REMOVE_FROM_CART } from "../constants/filterConstants";
+
 export const cartReducer = (state = { cart: [] }, action) => {
   switch (action.type) {
     case ADD_ITEM_TO_CART_REQUEST:
@@ -51,6 +53,32 @@ export const cartReducer = (state = { cart: [] }, action) => {
       };
     case UPDATE_CART_ITEM_QTY_FAIL:
       return { ...state, loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+
+
+
+
+export const cartReducer2 = (state={ cart : []}, action) => {
+  switch (action.type) {
+    case ADD_TO_CART:
+      return { ...state, cart: [...state.cart, { ...action.payload, qty: 1 }] };
+    case REMOVE_FROM_CART:
+      return {
+        ...state,
+        cart: state.cart.filter((c) => c.id !== action.payload.id),
+      };
+    case CHANGE_CART_QTY:
+      return {
+        ...state,
+        cart: state.cart.filter((c) =>
+          c.id === action.payload.id ? (c.qty = action.payload.qty) : c.qty
+        ),
+      };
 
     default:
       return state;

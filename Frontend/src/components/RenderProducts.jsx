@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { BsFillStarFill } from "react-icons/bs";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
-import { addToCart, removeItemFromCart } from "../actions/cartActions";
+// import { addToCart, removeItemFromCart } from "../actions/cartActions";
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../constants/filterConstants";
 
 
 const RenderProducts = () => {
@@ -19,8 +20,8 @@ const RenderProducts = () => {
   const productList = useSelector((state) => state.productList);
   const { loading, error, productArray } = productList;
 
-  const cartList = useSelector((state) => state.cartList);
-  const { cart } = cartList;
+  const cartList2 = useSelector((state) => state.cartList2);
+  const { cart } = cartList2;
 
   const filterState = useSelector((state) => state.filterState);
   const { byFreeDelivery, byRating, sort, searchQuery, byDiscount } =
@@ -124,9 +125,15 @@ const RenderProducts = () => {
               <span className="text-xs mx-2"> {product.reviews} Reviews</span>
 
               <div className="flex space-x-2 mt-1.5">
-                {cart.find((item) => item._id === product._id) ? (
+                {cart.some((item) => item._id === product._id) ? (
                   <button
-                    onClick={() => dispatch(removeItemFromCart(product._id))}
+                  onClick={()=>(
+                    dispatch({
+                      type: REMOVE_FROM_CART,
+                      payload:product
+                    })
+                  )}
+                    // onClick={() => dispatch(removeItemFromCart(product._id))}
                   
                     className="text-white  px-1 hover:bg-opacity-75 rounded bg-red-500"
                   >
@@ -135,7 +142,13 @@ const RenderProducts = () => {
                 ) : (
                   <>
                     <button
-                      onClick={() => dispatch(addToCart(product, 1))}
+                    onClick={()=>(
+                      dispatch({
+                        type : ADD_TO_CART,
+                        payload:product
+                      })
+                    )}
+                      // onClick={() => dispatch(addToCart(product, 1))}
                   
                       disabled={!product.stock}
                       className="text-white  disabled:opacity-50 px-1 hover:bg-opacity-75 rounded bg-blue-500"
