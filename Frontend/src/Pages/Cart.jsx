@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FormControl } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeItemFromCart, updateCartItemQty } from "../actions/cartActions";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
-import { CHANGE_CART_QTY } from "../constants/filterConstants";
+import { CHANGE_CART_QTY, REMOVE_FROM_CART } from "../constants/filterConstants";
+import animation from "./Animation - 1719594383895.json"
+import Lottie from "lottie-react"
 
 const Cart = () => {
   const dispatch = useDispatch()
@@ -14,8 +16,9 @@ const Cart = () => {
   const [total,setTotal] = useState();
   const [totalActualPrice,setTotalActualPrice]= useState()
   const [totalDiscountPercent,setTotalDiscountPercent] = useState()
-
+const navigate = useNavigate()
   useEffect(() => {
+    
     setTotal(
       cart.reduce((acc, curr) => acc + Number(curr.discountPrice)*curr.qty, 0)
     )
@@ -25,7 +28,18 @@ const Cart = () => {
     setTotalDiscountPercent(
       cart.reduce((acc, curr) => acc + Number(curr.discountPercentage) * curr.qty, 0)
     );
+   
   },[cart,dispatch])
+
+   useEffect(() => {
+     if (cart.length === 0) {
+       const timeoutId = setTimeout(() => {
+       navigate("/")
+       }, 3000);
+
+       return () => clearTimeout(timeoutId);
+     }
+   }, [cart]);
 
   return (
     <div className="bg-gray-50/45">
@@ -33,62 +47,76 @@ const Cart = () => {
         <div className="space-y-2 flex-grow">
           {loading && <Loading />}
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          {cart.map((prod) => (
-            <div className="flex bg-white text-gray-600 p-3 border rounded ">
-              <div className="w-[10vw]  overflow-hidden ">
-                <img
-                  src={prod.images[0]}
-                  className="object-cover h-full object-center"
-                />
-              </div>
-              <div className="w-full px-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline divide-x-2 ">
-                    <div className="text-xl mr-2">{prod.title}</div>
-                    <div className="px-2">{prod.category}</div>
-                  </div>
-                  <button
-                    onClick={removeItemFromCart(prod._id, prod.qty)}
-                    className="text-red-500"
-                  >
-                    Remove
-                  </button>
-                </div>
-                <div className="flex items-baseline space-x-2">
-                  <span className="text-lg">${prod.discountPrice}</span>
-                  <s>${prod.price}</s>
-                  <span className="text-green-600">
-                    {prod.discountPercentage}% off
-                  </span>
-                </div>
-
-                <FormControl
-                  as="select"
-                  value={prod.qty}
-                  // onChange={(e) => {updateCartItemQty(prod._id, e.target.value)}}
-                  onClick={(e) =>
-                    dispatch({
-                      type: CHANGE_CART_QTY,
-                      payload: {
-                        _id: prod._id,
-                        qty: e.target.value,
-                      },
-                    })
-                  }
-                  className="bg-slate-50 w-14  rounded  focus:outline-none focus:ring-4 focus:ring-indigo-300  "
-                >
-                  {[...Array(prod.stock).keys()].map((x) => (
-                    <option key={x + 1} className="bg-white p-2">
-                      {x + 1}
-                    </option>
-                  ))}
-                </FormControl>
-                <span className=" align-bottom px-2">Qty</span>
-
-                <p className="truncate">{prod.description}</p>
-              </div>
+          {cart.length === 0 ? (
+            <div className="w-[40vw] mx-auto overflow-hidden">
+              <Lottie animationData ={animation} loop autoplay className="" />
+              
             </div>
-          ))}
+          ) : (
+            <>
+              {cart.map((prod) => (
+                <div className="flex bg-white text-gray-600 p-3 border rounded ">
+                  <div className="w-[10vw]  overflow-hidden ">
+                    <img
+                      src={prod.images[0]}
+                      className="object-cover h-full object-center"
+                    />
+                  </div>
+                  <div className="w-full px-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-baseline divide-x-2 ">
+                        <div className="text-xl mr-2">{prod.title}</div>
+                        <div className="px-2">{prod.category}</div>
+                      </div>
+                      <button
+                        onClick={() =>
+                          dispatch({
+                            type: REMOVE_FROM_CART,
+                            payload: prod,
+                          })
+                        }
+                        className="text-red-500"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-lg">${prod.discountPrice}</span>
+                      <s>${prod.price}</s>
+                      <span className="text-green-600">
+                        {prod.discountPercentage}% off
+                      </span>
+                    </div>
+
+                    <FormControl
+                      as="select"
+                      value={prod.qty}
+                      // onChange={(e) => {updateCartItemQty(prod._id, e.target.value)}}
+                      onClick={(e) =>
+                        dispatch({
+                          type: CHANGE_CART_QTY,
+                          payload: {
+                            _id: prod._id,
+                            qty: e.target.value,
+                          },
+                        })
+                      }
+                      className="bg-slate-50 w-14  rounded  focus:outline-none focus:ring-4 focus:ring-indigo-300  "
+                    >
+                      {[...Array(prod.stock).keys()].map((x) => (
+                        <option key={x + 1} className="bg-white p-2">
+                          {x + 1}
+                        </option>
+                      ))}
+                    </FormControl>
+                    <span className=" align-bottom px-2">Qty</span>
+
+                    <p className="truncate">{prod.description}</p>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
 
         <div className="w-[25vw] *:py-2 shadow  bg-gray-100/45 text-slate-800  rounded">
